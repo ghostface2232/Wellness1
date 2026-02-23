@@ -594,14 +594,19 @@ nav .nav-brand span {
 .hscroll-container {
   position: relative;
 }
+.hscroll-nav {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
 .hscroll-wrap {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
   scrollbar-width: none;
-  margin: 0 calc(-1 * clamp(20px, 4vw, 48px));
-  padding: 8px clamp(20px, 4vw, 48px) 20px;
+  padding: 4px 0 20px;
 }
 .hscroll-wrap::-webkit-scrollbar { display: none; }
 .hscroll {
@@ -615,16 +620,11 @@ nav .nav-brand span {
   flex-shrink: 0;
 }
 .hscroll-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 10;
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   border: 1px solid var(--border-strong);
   background: var(--bg-card);
-  box-shadow: var(--shadow-md);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -634,25 +634,19 @@ nav .nav-brand span {
 }
 .hscroll-btn:hover {
   background: var(--bg-elevated);
-  box-shadow: var(--shadow-lg);
+  border-color: var(--text-tertiary);
   color: var(--text);
 }
-.hscroll-btn:active { transform: translateY(-50%) scale(0.95); }
-.hscroll-btn--left { left: 4px; }
-.hscroll-btn--right { right: 4px; }
-.hscroll-btn.hidden { opacity: 0; pointer-events: none; }
+.hscroll-btn:active { transform: scale(0.93); }
+.hscroll-btn.hidden { opacity: 0.3; pointer-events: none; }
 .hscroll-btn svg {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   stroke: currentColor;
   fill: none;
   stroke-width: 2;
   stroke-linecap: round;
   stroke-linejoin: round;
-}
-@media (max-width: 600px) {
-  .hscroll-btn { width: 34px; height: 34px; }
-  .hscroll-btn svg { width: 15px; height: 15px; }
 }
 
 /* ═══════════════════════════════════════ */
@@ -1025,7 +1019,10 @@ footer p {
     <!-- Micro Phenomena -->
     <h3 class="t-subsection mb-20 reveal">Micro Phenomena — 관찰 가능한 트렌드</h3>
     <div class="hscroll-container mb-48 reveal">
-      <button class="hscroll-btn hscroll-btn--left hidden" aria-label="Scroll left"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <div class="hscroll-nav">
+        <button class="hscroll-btn hscroll-btn--left hidden" aria-label="Scroll left"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
+        <button class="hscroll-btn hscroll-btn--right" aria-label="Scroll right"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
+      </div>
       <div class="hscroll-wrap">
         <div class="hscroll">
           <div class="card"><div class="chip chip--blue mb-12">Self-Classification</div><div class="t-subheading mb-8">MBTI / 에니어그램 열풍</div><p class="t-body">자기 이해 욕구는 역사적 최고치. 단, 외부 프레임 의존적 분류에 머무른다.</p></div>
@@ -1038,7 +1035,6 @@ footer p {
           <div class="card"><div class="chip chip--orange mb-12">AI Relation</div><div class="t-subheading mb-8">ChatGPT as Friend (채피)</div><p class="t-body">평가 없이 들어주는 존재에 대한 수요. 비판단적 관계의 갈증.</p></div>
         </div>
       </div>
-      <button class="hscroll-btn hscroll-btn--right" aria-label="Scroll right"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
     </div>
 
     <!-- Critical Reassessments -->

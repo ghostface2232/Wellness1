@@ -1,0 +1,1542 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adaptive Sensory Wellness Companion — C-Lab Briefing</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════ */
+/*  RESET & FOUNDATIONS                    */
+/* ═══════════════════════════════════════ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+:root {
+  --bg: #FAFAF8;
+  --bg-card: #FFFFFF;
+  --bg-elevated: #F5F5F0;
+  --bg-inset: #EEEEE8;
+  --bg-dark: #1A1A1E;
+  --bg-dark-card: #242428;
+  --text: #1A1A1E;
+  --text-secondary: #6B6B73;
+  --text-tertiary: #9A9AA0;
+  --text-inverse: #FAFAF8;
+  --accent: #3D5AFE;
+  --accent-soft: #E8ECFF;
+  --accent-warm: #FF6B35;
+  --border: rgba(0,0,0,0.06);
+  --border-strong: rgba(0,0,0,0.12);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.06);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,0.08);
+  --shadow-xl: 0 24px 60px rgba(0,0,0,0.10);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --font-body: "Pretendard Variable", "Pretendard", -apple-system, system-ui, sans-serif;
+  --font-display: "Instrument Serif", Georgia, serif;
+  --font-mono: "JetBrains Mono", monospace;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  letter-spacing: -0.01em;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  overflow-x: hidden;
+}
+
+/* ═══════════════════════════════════════ */
+/*  TYPOGRAPHY SYSTEM                      */
+/* ═══════════════════════════════════════ */
+.t-hero {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 6vw, 5rem);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  font-weight: 400;
+}
+.t-section {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+}
+.t-subsection {
+  font-size: clamp(1.25rem, 2vw, 1.6rem);
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+}
+.t-subheading {
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+}
+.t-body {
+  font-size: 0.975rem;
+  line-height: 1.75;
+  letter-spacing: -0.005em;
+  color: var(--text-secondary);
+}
+.t-caption {
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--text-tertiary);
+  letter-spacing: 0;
+}
+.t-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-tertiary);
+}
+.t-mono {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+}
+
+/* ═══════════════════════════════════════ */
+/*  LAYOUT                                 */
+/* ═══════════════════════════════════════ */
+.container {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 48px);
+}
+.container--narrow {
+  max-width: 800px;
+}
+.container--wide {
+  max-width: 1320px;
+}
+
+section {
+  padding: clamp(60px, 10vh, 120px) 0;
+  position: relative;
+}
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+@media (max-width: 900px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+}
+@media (min-width: 901px) and (max-width: 1100px) {
+  .grid-3 { grid-template-columns: 1fr 1fr; }
+  .grid-4 { grid-template-columns: 1fr 1fr; }
+}
+
+/* ═══════════════════════════════════════ */
+/*  ANIMATIONS                             */
+/* ═══════════════════════════════════════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes slideRight {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 0.4; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-delay-1 { transition-delay: 0.08s; }
+.reveal-delay-2 { transition-delay: 0.16s; }
+.reveal-delay-3 { transition-delay: 0.24s; }
+.reveal-delay-4 { transition-delay: 0.32s; }
+.reveal-delay-5 { transition-delay: 0.40s; }
+
+/* ═══════════════════════════════════════ */
+/*  NAVIGATION                             */
+/* ═══════════════════════════════════════ */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 14px 0;
+  background: rgba(250,250,248,0.72);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+  transition: all 0.35s var(--ease-out);
+}
+nav.scrolled {
+  padding: 10px 0;
+  box-shadow: var(--shadow-sm);
+}
+nav .nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 48px);
+}
+nav .nav-brand {
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+nav .nav-brand span {
+  display: inline-block;
+  background: var(--accent);
+  color: white;
+  font-size: 0.65rem;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-left: 8px;
+  vertical-align: middle;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.nav-links {
+  display: flex;
+  gap: 4px;
+  list-style: none;
+}
+.nav-links a {
+  display: block;
+  padding: 6px 14px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  border-radius: 8px;
+  transition: all 0.2s;
+  letter-spacing: -0.01em;
+}
+.nav-links a:hover {
+  color: var(--text);
+  background: rgba(0,0,0,0.04);
+}
+.nav-links a.active {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+@media (max-width: 900px) {
+  .nav-links { display: none; }
+}
+
+/* ═══════════════════════════════════════ */
+/*  HERO                                   */
+/* ═══════════════════════════════════════ */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding-top: 80px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse 60% 50% at 20% 40%, rgba(61,90,254,0.04) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 80% 60%, rgba(255,107,53,0.03) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-content {
+  position: relative;
+  max-width: 780px;
+}
+.hero-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-strong);
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 32px;
+  animation: fadeUp 0.8s var(--ease-out) 0.2s both;
+}
+.hero-label .dot {
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  position: relative;
+}
+.hero-label .dot::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 1.5px solid var(--accent);
+  animation: pulse-ring 2s ease-out infinite;
+}
+.hero h1 {
+  animation: fadeUp 0.8s var(--ease-out) 0.35s both;
+  margin-bottom: 24px;
+}
+.hero h1 em {
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--accent);
+}
+.hero-sub {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  max-width: 580px;
+  margin: 0 auto 40px;
+  animation: fadeUp 0.8s var(--ease-out) 0.5s both;
+}
+.hero-meta {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  animation: fadeUp 0.8s var(--ease-out) 0.65s both;
+}
+.hero-meta-item {
+  text-align: center;
+}
+.hero-meta-item .val {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.03em;
+}
+.hero-meta-item .lbl {
+  font-size: 0.7rem;
+  color: var(--text-tertiary);
+  margin-top: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 500;
+}
+.scroll-hint {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: fadeIn 1s var(--ease-out) 1.2s both, float 2.5s ease-in-out infinite 2s;
+}
+.scroll-hint svg {
+  width: 20px;
+  height: 20px;
+  stroke: var(--text-tertiary);
+}
+
+/* ═══════════════════════════════════════ */
+/*  SECTION HEADERS                        */
+/* ═══════════════════════════════════════ */
+.section-header {
+  margin-bottom: clamp(36px, 5vw, 56px);
+}
+.section-header .section-num {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--accent);
+  letter-spacing: 0.04em;
+  margin-bottom: 12px;
+  display: block;
+}
+.section-header h2 {
+  margin-bottom: 16px;
+}
+.section-header .section-desc {
+  max-width: 600px;
+}
+
+/* ═══════════════════════════════════════ */
+/*  CARDS                                  */
+/* ═══════════════════════════════════════ */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: clamp(24px, 3vw, 36px);
+  transition: all 0.3s var(--ease-out);
+}
+.card:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+.card--flat {
+  background: var(--bg-elevated);
+  border: none;
+}
+.card--flat:hover {
+  background: var(--bg-inset);
+  box-shadow: none;
+}
+.card--dark {
+  background: var(--bg-dark);
+  border: 1px solid rgba(255,255,255,0.06);
+  color: var(--text-inverse);
+}
+.card--dark:hover {
+  border-color: rgba(255,255,255,0.12);
+}
+.card--dark .t-body { color: rgba(255,255,255,0.6); }
+.card--dark .t-caption { color: rgba(255,255,255,0.35); }
+.card--accent {
+  background: var(--accent);
+  border: none;
+  color: white;
+}
+.card--accent .t-body { color: rgba(255,255,255,0.8); }
+.card-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  font-size: 1.3rem;
+}
+.card-icon--blue { background: #E8ECFF; }
+.card-icon--orange { background: #FFF0E8; }
+.card-icon--green { background: #E8F5E8; }
+.card-icon--purple { background: #F0E8FF; }
+.card-icon--pink { background: #FFE8F0; }
+.card-icon--dark { background: rgba(255,255,255,0.08); }
+
+/* ═══════════════════════════════════════ */
+/*  DATA TABLE                             */
+/* ═══════════════════════════════════════ */
+.data-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+}
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.data-table th {
+  text-align: left;
+  padding: 14px 18px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-tertiary);
+  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+.data-table td {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  line-height: 1.55;
+  vertical-align: top;
+}
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: rgba(0,0,0,0.015); }
+.data-table td:first-child { font-weight: 500; color: var(--text); }
+
+/* ═══════════════════════════════════════ */
+/*  STAT CARDS                             */
+/* ═══════════════════════════════════════ */
+.stat {
+  text-align: center;
+  padding: 28px 16px;
+}
+.stat .stat-val {
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: var(--text);
+  line-height: 1.1;
+}
+.stat .stat-val .stat-unit {
+  font-size: 0.5em;
+  font-weight: 500;
+  color: var(--text-tertiary);
+}
+.stat .stat-label {
+  font-size: 0.78rem;
+  color: var(--text-tertiary);
+  margin-top: 8px;
+  line-height: 1.4;
+}
+
+/* ═══════════════════════════════════════ */
+/*  CHIPS & TAGS                           */
+/* ═══════════════════════════════════════ */
+.chip {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+.chip--blue { background: #E8ECFF; color: #3D5AFE; }
+.chip--orange { background: #FFF0E8; color: #E85D04; }
+.chip--green { background: #E8F5E8; color: #2E7D32; }
+.chip--gray { background: var(--bg-elevated); color: var(--text-secondary); }
+
+/* ═══════════════════════════════════════ */
+/*  COMPARISON BLOCKS                      */
+/* ═══════════════════════════════════════ */
+.compare-row {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 0;
+  align-items: stretch;
+  margin-bottom: 2px;
+}
+.compare-row .compare-left, .compare-row .compare-right {
+  padding: 16px 20px;
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+.compare-row .compare-left {
+  background: var(--bg-elevated);
+  text-align: right;
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+  color: var(--text-secondary);
+}
+.compare-row .compare-right {
+  background: var(--accent-soft);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  color: var(--accent);
+  font-weight: 500;
+}
+.compare-row .compare-vs {
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  font-size: 0.65rem;
+  color: var(--text-tertiary);
+  font-weight: 600;
+}
+@media (max-width: 700px) {
+  .compare-row { grid-template-columns: 1fr; }
+  .compare-row .compare-left { text-align: left; border-radius: var(--radius-sm) var(--radius-sm) 0 0; }
+  .compare-row .compare-vs { width: 100%; padding: 4px; }
+  .compare-row .compare-right { border-radius: 0 0 var(--radius-sm) var(--radius-sm); }
+}
+
+/* ═══════════════════════════════════════ */
+/*  HORIZONTAL SCROLL CARDS               */
+/* ═══════════════════════════════════════ */
+.hscroll-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  margin: 0 calc(-1 * clamp(20px, 4vw, 48px));
+  padding: 8px clamp(20px, 4vw, 48px) 20px;
+}
+.hscroll-wrap::-webkit-scrollbar { display: none; }
+.hscroll {
+  display: flex;
+  gap: 16px;
+  width: max-content;
+}
+.hscroll > .card {
+  scroll-snap-align: start;
+  width: clamp(280px, 30vw, 340px);
+  flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════ */
+/*  QUOTE / CALLOUT                        */
+/* ═══════════════════════════════════════ */
+.callout {
+  position: relative;
+  padding: 32px 36px;
+  border-radius: var(--radius-lg);
+  background: var(--bg-elevated);
+  border-left: 3px solid var(--accent);
+}
+.callout p {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 2vw, 1.35rem);
+  line-height: 1.6;
+  color: var(--text);
+  font-style: italic;
+}
+.callout .callout-src {
+  margin-top: 12px;
+  font-family: var(--font-body);
+  font-style: normal;
+  font-size: 0.78rem;
+  color: var(--text-tertiary);
+}
+
+/* ═══════════════════════════════════════ */
+/*  ARCHITECTURE LAYER                     */
+/* ═══════════════════════════════════════ */
+.arch-layer {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 0;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-bottom: 3px;
+  transition: all 0.25s var(--ease-out);
+}
+.arch-layer:hover { transform: translateX(4px); }
+.arch-layer .arch-label {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: white;
+  text-align: center;
+}
+.arch-layer .arch-content {
+  padding: 20px 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: none;
+}
+.arch-layer .arch-content .t-subheading { margin-bottom: 6px; }
+@media (max-width: 600px) {
+  .arch-layer { grid-template-columns: 1fr; }
+  .arch-layer .arch-label { padding: 12px; }
+  .arch-layer .arch-content { border-left: 1px solid var(--border); }
+}
+
+/* ═══════════════════════════════════════ */
+/*  DIVIDER                                */
+/* ═══════════════════════════════════════ */
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: clamp(40px, 6vw, 80px) 0;
+}
+
+/* ═══════════════════════════════════════ */
+/*  DARK SECTION                           */
+/* ═══════════════════════════════════════ */
+.section--dark {
+  background: var(--bg-dark);
+  color: var(--text-inverse);
+}
+.section--dark .t-body { color: rgba(255,255,255,0.6); }
+.section--dark .t-caption { color: rgba(255,255,255,0.35); }
+.section--dark .t-label { color: rgba(255,255,255,0.35); }
+.section--dark .section-header .section-num { color: var(--accent-warm); }
+.section--dark .card { background: var(--bg-dark-card); border-color: rgba(255,255,255,0.06); color: var(--text-inverse); }
+.section--dark .card:hover { border-color: rgba(255,255,255,0.12); }
+.section--dark .card .t-body { color: rgba(255,255,255,0.6); }
+.section--dark .data-table-wrap { border-color: rgba(255,255,255,0.08); background: var(--bg-dark-card); }
+.section--dark .data-table th { background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.4); border-color: rgba(255,255,255,0.06); }
+.section--dark .data-table td { color: rgba(255,255,255,0.6); border-color: rgba(255,255,255,0.06); }
+.section--dark .data-table td:first-child { color: rgba(255,255,255,0.9); }
+.section--dark .data-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+/* ═══════════════════════════════════════ */
+/*  FOOTER                                 */
+/* ═══════════════════════════════════════ */
+footer {
+  padding: 48px 0;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+footer p {
+  font-size: 0.78rem;
+  color: var(--text-tertiary);
+}
+
+/* ═══════════════════════════════════════ */
+/*  TIMELINE                               */
+/* ═══════════════════════════════════════ */
+.timeline {
+  position: relative;
+  padding-left: 32px;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--accent), var(--accent-warm));
+  border-radius: 2px;
+}
+.timeline-item {
+  position: relative;
+  margin-bottom: 32px;
+}
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -29px;
+  top: 8px;
+  width: 12px;
+  height: 12px;
+  background: var(--bg);
+  border: 3px solid var(--accent);
+  border-radius: 50%;
+}
+.timeline-item:last-child::before { border-color: var(--accent-warm); }
+
+/* ═══════════════════════════════════════ */
+/*  PROGRESS INDICATOR                     */
+/* ═══════════════════════════════════════ */
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-warm));
+  z-index: 101;
+  transition: width 0.1s linear;
+}
+
+/* ═══════════════════════════════════════ */
+/*  SPACING UTILITIES                      */
+/* ═══════════════════════════════════════ */
+.mb-4 { margin-bottom: 4px; }
+.mb-8 { margin-bottom: 8px; }
+.mb-12 { margin-bottom: 12px; }
+.mb-16 { margin-bottom: 16px; }
+.mb-20 { margin-bottom: 20px; }
+.mb-24 { margin-bottom: 24px; }
+.mb-32 { margin-bottom: 32px; }
+.mb-40 { margin-bottom: 40px; }
+.mb-48 { margin-bottom: 48px; }
+.mt-8 { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.gap-8 { gap: 8px; }
+.gap-12 { gap: 12px; }
+.flex { display: flex; }
+.flex-wrap { flex-wrap: wrap; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+</style>
+</head>
+<body>
+
+<!-- Progress Bar -->
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- Navigation -->
+<nav id="mainNav">
+  <div class="nav-inner">
+    <div class="nav-brand">ASWC <span>C-Lab</span></div>
+    <ul class="nav-links">
+      <li><a href="#market" data-section="market">Market</a></li>
+      <li><a href="#generation" data-section="generation">Generation</a></li>
+      <li><a href="#definition" data-section="definition">Definition</a></li>
+      <li><a href="#philosophy" data-section="philosophy">Philosophy</a></li>
+      <li><a href="#tech" data-section="tech">Tech</a></li>
+      <li><a href="#ux" data-section="ux">UX</a></li>
+      <li><a href="#strategy" data-section="strategy">Strategy</a></li>
+      <li><a href="#next" data-section="next">Next</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════ -->
+<!--  HERO                                   -->
+<!-- ═══════════════════════════════════════ -->
+<section class="hero" id="hero">
+  <div class="hero-content">
+    <div class="hero-label"><span class="dot"></span>Samsung C-Lab Project Briefing</div>
+    <h1 class="t-hero">Adaptive Sensory<br><em>Wellness</em> Companion</h1>
+    <p class="hero-sub">나에게 맞는 것과 맞지 않는 것을 구분하는 감각이 작동하는 상태.<br>그 감각의 회복을 돕는 적응형 웰니스 솔루션.</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item"><div class="val">$57.1B</div><div class="lbl">Wellness Tech Market 2025</div></div>
+      <div class="hero-meta-item"><div class="val">3.3<span class="stat-unit">%</span></div><div class="lbl">Mental Health App 30d Retention</div></div>
+      <div class="hero-meta-item"><div class="val">46<span class="stat-unit">%</span></div><div class="lbl">Gen Z w/ MH Diagnosis</div></div>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!--  SECTION 1: MARKET LANDSCAPE            -->
+<!-- ═══════════════════════════════════════ -->
+<section id="market">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-num">01</span>
+      <h2 class="t-section">Market Landscape</h2>
+      <p class="t-body section-desc">웰니스 테크놀로지 시장은 폭발적으로 성장하고 있으나, 멘탈 웰니스 앱은 구조적 리텐션 위기에 직면해 있다.</p>
+    </div>
+
+    <!-- Market Size Stats -->
+    <div class="grid-4 mb-40 reveal reveal-delay-1">
+      <div class="card stat">
+        <div class="stat-val">$4.5<span class="stat-unit">T</span></div>
+        <div class="stat-label">Global Health & Wellness 2024</div>
+      </div>
+      <div class="card stat">
+        <div class="stat-val">$208<span class="stat-unit">B</span></div>
+        <div class="stat-label">Wellness Tech 2035 Forecast</div>
+      </div>
+      <div class="card stat">
+        <div class="stat-val">13.8<span class="stat-unit">%</span></div>
+        <div class="stat-label">Wellness Tech CAGR</div>
+      </div>
+      <div class="card stat">
+        <div class="stat-val">18.6<span class="stat-unit">%</span></div>
+        <div class="stat-label">Connected Devices CAGR</div>
+      </div>
+    </div>
+
+    <!-- Retention Crisis -->
+    <h3 class="t-subsection mb-20 reveal">Retention Crisis</h3>
+    <p class="t-body mb-24 reveal">시장의 성장과 별개로, 멘탈 웰니스 앱의 리텐션 위기는 심각하다. 93개 안드로이드 멘탈헬스 앱을 분석한 JMIR 연구에 따르면, 30일 리텐션율 중앙값은 3.3%, 일일 활성 사용자율 중앙값은 4.0%에 불과하다. 18개 RCT를 메타분석한 2020년 연구에서는 출판 편향 보정 시 탈락률이 47.8%에 달했다.</p>
+
+    <div class="data-table-wrap mb-40 reveal">
+      <table class="data-table">
+        <thead><tr><th>Metric</th><th>Value</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td>30-day Retention (median)</td><td>3.3%</td><td>JMIR, 93 Android apps</td></tr>
+          <tr><td>15-day Retention (median)</td><td>3.9%</td><td>JMIR, 93 Android apps</td></tr>
+          <tr><td>Daily Active User Rate</td><td>4.0%</td><td>JMIR, 93 Android apps</td></tr>
+          <tr><td>Clinical Trial Dropout</td><td>26.2% (adjusted: 47.8%)</td><td>2020 meta-analysis, 18 RCTs</td></tr>
+          <tr><td>Root Causes</td><td>UX 40%, Content 35%, Design 25%</td><td>Systematic review</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Root Causes -->
+    <h3 class="t-subsection mb-20 reveal">리텐션 실패의 구조적 원인</h3>
+    <div class="grid-2 mb-40 reveal">
+      <div class="card--flat card">
+        <div class="t-subheading mb-8">1. 급성 필요의 소멸</div>
+        <p class="t-body">위기 시점에 다운로드하지만, 급성 필요가 지나면 동기가 사라진다. 멘탈헬스 앱은 진통제처럼 쓰이지만 비타민처럼 지속되지 않는다.</p>
+      </div>
+      <div class="card--flat card">
+        <div class="t-subheading mb-8">2. 기대-경험 불일치</div>
+        <p class="t-body">마케팅이 약속하는 경험과 실제 사용 경험 사이의 간극이 크다. 특히 개인화 부족으로 인해 콘텐츠의 체감 관련성이 낮다.</p>
+      </div>
+      <div class="card--flat card">
+        <div class="t-subheading mb-8">3. 외재적 보상의 역효과</div>
+        <p class="t-body">스트릭, 포인트 등 외재적 보상에 의존하면 내재적 동기를 잠식한다(과잉정당화 효과). 자기결정이론이 이를 설명한다.</p>
+      </div>
+      <div class="card--flat card">
+        <div class="t-subheading mb-8">4. 의도적 결심의 피로</div>
+        <p class="t-body">앱을 열어야 시작되는 구조가 매일의 결심을 요구한다. 이 결심 자체가 리텐션을 파괴하는 구조적 원인이다.</p>
+      </div>
+    </div>
+
+    <!-- Gen Z MH -->
+    <h3 class="t-subsection mb-20 reveal">Gen Z Mental Health: The Numbers</h3>
+    <div class="data-table-wrap reveal">
+      <table class="data-table">
+        <thead><tr><th>Indicator</th><th>Value</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td>정신건강 진단 경험</td><td>46%</td><td>Harmony Healthcare IT, 2025</td></tr>
+          <tr><td>현재 치료 중</td><td>42% (2022 대비 22%↑)</td><td>Harmony Healthcare IT, 2025</td></tr>
+          <tr><td>스트레스로 인한 업무 방해</td><td>54%</td><td>Deloitte, 2025</td></tr>
+          <tr><td>정신건강 관련 퇴직 고려</td><td>61%</td><td>SHRM, 2025</td></tr>
+          <tr><td>지속적 불안/스트레스 경험</td><td>10명 중 4명 (전 세계)</td><td>WHO/UNICEF, 2025</td></tr>
+          <tr><td>낙인으로 인한 치료 기피</td><td>46%</td><td>The Hartford, 2025</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="container"><div class="divider"></div></div>
+
+<!-- ═══════════════════════════════════════ -->
+<!--  SECTION 2: TARGET GENERATION           -->
+<!-- ═══════════════════════════════════════ -->
+<section id="generation">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-num">02</span>
+      <h2 class="t-section">Target Generation Analysis</h2>
+      <p class="t-body section-desc">Gen Z/Alpha 세대의 환경, 믿음 체계, 행동 패턴을 3단 구조로 분석한다.</p>
+    </div>
+
+    <!-- Macro Conditions -->
+    <h3 class="t-subsection mb-20 reveal">Macro Conditions — 바꿀 수 없는 환경</h3>
+    <div class="grid-3 mb-48 reveal">
+      <div class="card">
+        <div class="card-icon card-icon--blue">🏛</div>
+        <div class="t-subheading mb-8">의미 체계의 붕괴</div>
+        <p class="t-body">종교, 국가, 가족, 계급 등 전통적 의미 부여 시스템의 설득력 상실. 정체성을 스스로 구성해야 하는 시대.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon card-icon--orange">📉</div>
+        <div class="t-subheading mb-8">노력-보상 공식 파괴</div>
+        <p class="t-body">열심히 하면 보상받는다는 공식의 작동 불능. 장기적 투자에 대한 구조적 불신.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon card-icon--purple">🔍</div>
+        <div class="t-subheading mb-8">권위 체계 불신</div>
+        <p class="t-body">전문가, 기성세대, 제도의 반복적 실패 목격. 누가 말하느냐보다 신뢰하는 사람이 말하느냐가 기준.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon card-icon--pink">📸</div>
+        <div class="t-subheading mb-8">디지털 영속성</div>
+        <p class="t-body">모든 것이 기록되고 소환되는 환경. 자기 표현에 대한 통제 욕구 강화.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon card-icon--green">⚡</div>
+        <div class="t-subheading mb-8">결과만 노출되는 환경</div>
+        <p class="t-body">알고리즘이 과정 없이 결과만 자극적으로 전시. 과정 자체의 가치를 체감하기 어려운 구조.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon card-icon--blue">🪪</div>
+        <div class="t-subheading mb-8">전통 정체성 축 약화</div>
+        <p class="t-body">직업, 가족, 지역, 종교로 자신을 정의하기 어려워짐. 유동성 증가와 구조적 불안정.</p>
+      </div>
+    </div>
+
+    <!-- Belief System -->
+    <h3 class="t-subsection mb-20 reveal">Belief System — 적응 전략으로 형성된 믿음</h3>
+    <div class="data-table-wrap mb-48 reveal">
+      <table class="data-table">
+        <thead><tr><th style="width:24%">Belief Code</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>Authenticity as Supreme Value</td><td>연출 가능한 환경에서 자랐기에, 연출되지 않은 것의 가치가 올라갔다. 찐만이 인정받는다.</td></tr>
+          <tr><td>Identity Must Be Discovered</td><td>만들어진 정체성은 가짜. 원래 있던 것을 찾아야 필연이고, 필연이어야 안전하다.</td></tr>
+          <tr><td>Relational Uniqueness as Proof</td><td>다른 의미 체계가 없으므로, 관계 속 고유한 존재로 인정받는 것이 유일한 확인 수단이다.</td></tr>
+          <tr><td>Interpretation Control = Survival</td><td>영속적 기록 환경에서, 의도하지 않은 해석이 붙으면 되돌릴 수 없다.</td></tr>
+          <tr><td>Taste = Identity</td><td>남은 정체성 재료 중 가장 안전하고, 접근 가능하고, 차별화 가능한 것이 취향이다.</td></tr>
+          <tr><td>Present Micro-Satisfaction</td><td>미래 보상을 믿을 수 없으니, 지금 확실한 작은 만족이 합리적이다.</td></tr>
+          <tr><td>Skill Effort vs Identity Effort</td><td>실력을 위한 노력은 숭상. 정체성 구성 노력은 은폐해야 한다.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Micro Phenomena -->
+    <h3 class="t-subsection mb-20 reveal">Micro Phenomena — 관찰 가능한 트렌드</h3>
+    <div class="hscroll-wrap mb-48 reveal">
+      <div class="hscroll">
+        <div class="card"><div class="chip chip--blue mb-12">Self-Classification</div><div class="t-subheading mb-8">MBTI / 에니어그램 열풍</div><p class="t-body">자기 이해 욕구는 역사적 최고치. 단, 외부 프레임 의존적 분류에 머무른다.</p></div>
+        <div class="card"><div class="chip chip--orange mb-12">Identity Curation</div><div class="t-subheading mb-8">Spotify Replay 공유</div><p class="t-body">취향의 시각화 및 공유를 통한 정체성 표현. 점수 없이 패턴만 보여준다.</p></div>
+        <div class="card"><div class="chip chip--green mb-12">Embodied Wellness</div><div class="t-subheading mb-8">러닝크루 문화</div><p class="t-body">즉시 보상(성취감, 유대) + 장기적 자기 발견이 자연스럽게 결합된 사례.</p></div>
+        <div class="card"><div class="chip chip--blue mb-12">Deep Engagement</div><div class="t-subheading mb-8">디깅 문화</div><p class="t-body">장기 몰입이 불가능한 게 아니다. 의미를 느끼면 깊이 판다.</p></div>
+        <div class="card"><div class="chip chip--orange mb-12">Sensory Recalibration</div><div class="t-subheading mb-8">텍스트힙 / 안티도파민</div><p class="t-body">과잉 자극에 대한 자발적 조절 시도. 감각 재조정의 자생적 움직임.</p></div>
+        <div class="card"><div class="chip chip--green mb-12">Reframed Wellness</div><div class="t-subheading mb-8">Walden / 모던 명상</div><p class="t-body">명상의 재해석. 쿨한 프레이밍이 진입장벽을 낮춘다.</p></div>
+        <div class="card"><div class="chip chip--blue mb-12">Micro-Satisfaction</div><div class="t-subheading mb-8">두쫀쿠</div><p class="t-body">작은 감각적 만족의 정당화. 웰니스가 반드시 고차원일 필요 없다.</p></div>
+        <div class="card"><div class="chip chip--orange mb-12">AI Relation</div><div class="t-subheading mb-8">ChatGPT as Friend (채피)</div><p class="t-body">평가 없이 들어주는 존재에 대한 수요. 비판단적 관계의 갈증.</p></div>
+      </div>
+    </div>
+
+    <!-- Critical Reassessments -->
+    <h3 class="t-subsection mb-20 reveal">Critical Reassessments — 초기 가정 교정</h3>
+    <div class="grid-2 reveal">
+      <div class="card">
+        <div class="chip chip--gray mb-12">Reassessment 1</div>
+        <div class="t-subheading mb-8">내면 탐색이 줄었다?</div>
+        <p class="t-body">오히려 빈도는 역사적 최고치. 문제는 깊이. 매번 얕게 들여다보는 것. MBTI는 자기 인식이 아니라 자기 분류.</p>
+      </div>
+      <div class="card">
+        <div class="chip chip--gray mb-12">Reassessment 2</div>
+        <div class="t-subheading mb-8">자기관리 도구가 거부된다?</div>
+        <p class="t-body">거부되는 건 도구가 아니라 동기의 진정성. 찐이면 무엇이든 수용된다. Walden, 저속노화, 러닝크루가 증거.</p>
+      </div>
+      <div class="card">
+        <div class="chip chip--gray mb-12">Reassessment 3</div>
+        <div class="t-subheading mb-8">장기 과정을 못 견딘다?</div>
+        <p class="t-body">못 견디는 건 의미 없는 과정. 디깅, 침착맨 4시간 방송, 슬램덩크 밤샘이 반증. 시작 마찰이 낮으면 장기 과정도 감수.</p>
+      </div>
+      <div class="card">
+        <div class="chip chip--gray mb-12">Reassessment 4</div>
+        <div class="t-subheading mb-8">결핍-개선 모델이 충돌?</div>
+        <p class="t-body">모델 자체가 문제가 아니라 기준의 출처가 문제. 외부 기준이면 거부, 내부 기준이면 수용. 저속노화가 증거.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!--  SECTION 3: WELLNESS REDEFINED (DARK)   -->
+<!-- ═══════════════════════════════════════ -->
+<section id="definition" class="section--dark">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-num">03</span>
+      <h2 class="t-section">Wellness Redefined</h2>
+      <p class="t-body section-desc">위 분석을 종합하여 도출한 웰니스의 새로운 정의와 그 이론적 근거.</p>
+    </div>
+
+    <!-- Core Definition -->
+    <div class="card card--accent mb-48 reveal" style="text-align:center;padding:clamp(40px,6vw,72px) clamp(24px,4vw,56px);">
+      <p style="font-family:var(--font-display);font-size:clamp(1.3rem,2.5vw,1.8rem);line-height:1.55;font-style:italic;color:white;opacity:0.95;">Wellness is the state in which one's sensory capacity<br>to distinguish what fits from what doesn't<br>is actively functioning.</p>
+      <p style="margin-top:24px;font-size:1rem;color:rgba(255,255,255,0.7);line-height:1.7;">웰니스란 나에게 맞는 것과 맞지 않는 것을<br>구분하는 감각이 작동하는 상태이다.</p>
+    </div>
+
+    <!-- Distinctions -->
+    <h3 class="t-subsection mb-20 reveal" style="color:var(--text-inverse)">기존 정의와의 차이</h3>
+    <div class="mb-48">
+      <div class="compare-row reveal"><div class="compare-left">특정 상태에 도달하는 것</div><div class="compare-vs">vs</div><div class="compare-right">감각이 작동하는 상태</div></div>
+      <div class="compare-row reveal reveal-delay-1"><div class="compare-left">좋은 삶의 내용을 규정</div><div class="compare-vs">vs</div><div class="compare-right">내용을 규정하지 않음</div></div>
+      <div class="compare-row reveal reveal-delay-2"><div class="compare-left">외부 기준 (건강, 균형, 행복)</div><div class="compare-vs">vs</div><div class="compare-right">내부 감각의 작동 여부</div></div>
+      <div class="compare-row reveal reveal-delay-3"><div class="compare-left">목적지가 있음</div><div class="compare-vs">vs</div><div class="compare-right">감각은 진행형, 나는 계속 변한다</div></div>
+      <div class="compare-row reveal reveal-delay-4"><div class="compare-left">반대 = 병리</div><div class="compare-vs">vs</div><div class="compare-right">반대 = 감각 마비 (끌려다니는 느낌)</div></div>
+    </div>
+
+    <!-- Target Zone -->
+    <div class="callout mb-48 reveal" style="background:var(--bg-dark-card);border-left-color:var(--accent-warm);">
+      <p style="color:rgba(255,255,255,0.9);">타겟 영역은 languishing — 임상적 우울은 아니지만 번영하지도 않는, 뭔가 맞지 않고 끌려다니는 상태. 이 상태를 flourishing으로 이동시키는 메커니즘이 자기 감각의 회복이다.</p>
+      <div class="callout-src" style="color:rgba(255,255,255,0.35);">Corey Keyes, Languishing-Flourishing Continuum</div>
+    </div>
+
+    <!-- Theoretical Roots -->
+    <h3 class="t-subsection mb-20 reveal" style="color:var(--text-inverse)">Theoretical Foundations</h3>
+    <div class="grid-3 reveal">
+      <div class="card">
+        <div class="t-label mb-8">Core Root</div>
+        <div class="t-subheading mb-8">Carl Rogers</div>
+        <p class="t-body">유기체적 가치화 과정의 회복 = 우리가 정의한 웰니스. 조건만 맞으면 인간은 스스로 자기를 발견한다.</p>
+      </div>
+      <div class="card">
+        <div class="t-label mb-8">Reward Design</div>
+        <div class="t-subheading mb-8">Self-Determination Theory</div>
+        <p class="t-body">자율성, 유능감, 관계성. 외재적 보상이 내재적 동기를 잠식하지 않는 보상 설계 원칙.</p>
+      </div>
+      <div class="card">
+        <div class="t-label mb-8">Mechanism</div>
+        <div class="t-subheading mb-8">Flow Theory</div>
+        <p class="t-body">몰입 중 자기 망각, 몰입 후 자기 발견. 쾌락과 발견의 결합 메커니즘.</p>
+      </div>
+      <div class="card">
+        <div class="t-label mb-8">Method</div>
+        <div class="t-subheading mb-8">Nudge Theory</div>
+        <p class="t-body">강요 없는 유도. 다만 외부 기준 없이 자기 기준 발견을 유도하는 방향.</p>
+      </div>
+      <div class="card">
+        <div class="t-label mb-8">Values</div>
+        <div class="t-subheading mb-8">Ethics of Authenticity</div>
+        <p class="t-body">찰스 테일러. 자기 자신에게 진실한 것이 도덕적 이상이 된 시대의 분석.</p>
+      </div>
+      <div class="card">
+        <div class="t-label mb-8">Spectrum</div>
+        <div class="t-subheading mb-8">Keyes' Continuum</div>
+        <p class="t-body">정신건강은 이항 대립이 아닌 연속체. Languishing에서 flourishing으로의 이동.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!--  SECTION 4: FOUR DIRECTIONS             -->
+<!-- ═══════════════════════════════════════ -->
+<section id="directions">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-num">03-b</span>
+      <h2 class="t-section">Four Directions</h2>
+      <p class="t-body section-desc">감각 마비의 원인별 네 가지 개입 방향.</p>
+    </div>
+
+    <div class="grid-2 reveal">
+      <div class="card" style="border-left:3px solid #3D5AFE;">
+        <div class="t-label mb-8" style="color:#3D5AFE;">Direction 1</div>
+        <div class="t-subsection mb-12" style="font-size:1.3rem;">감각의 해상도</div>
+        <p class="t-body mb-16">과잉 자극으로 인한 둔감화. 시끄러운 방에서 속삭임을 못 듣는 상태. 자극을 끊는 것이 아니라, 자극 속에서도 내면 신호를 감지하는 능력을 키운다.</p>
+        <div class="chip chip--blue">Sensory Resolution</div>
+      </div>
+      <div class="card" style="border-left:3px solid #FF6B35;">
+        <div class="t-label mb-8" style="color:#FF6B35;">Direction 2</div>
+        <div class="t-subsection mb-12" style="font-size:1.3rem;">탐색의 반경</div>
+        <p class="t-body mb-16">경험 부족으로 인한 기준 부재. 알고리즘 필터 버블 속에서 아직 만나지 못한, 나에게 맞는 것을 발견할 기회를 만든다.</p>
+        <div class="chip chip--orange">Exploration Radius</div>
+      </div>
+      <div class="card" style="border-left:3px solid #2E7D32;">
+        <div class="t-label mb-8" style="color:#2E7D32;">Direction 3</div>
+        <div class="t-subsection mb-12" style="font-size:1.3rem;">자기 사전</div>
+        <p class="t-body mb-16">느끼지만 표현하지 못하는 문제. 감각이 작동해도 언어로 만들지 못하면 휘발된다. 자기 감각을 자기 언어로 포착하고 축적하는 것.</p>
+        <div class="chip chip--green">Personal Dictionary</div>
+      </div>
+      <div class="card" style="border-left:3px solid #7B1FA2;">
+        <div class="t-label mb-8" style="color:#7B1FA2;">Direction 4</div>
+        <div class="t-subsection mb-12" style="font-size:1.3rem;">감각의 동맹</div>
+        <p class="t-body mb-16">느끼지만 믿지 못하는 문제. 내 감각을 있는 그대로 인정받는 경험이 반복되면, 자기 감각을 신뢰하게 된다.</p>
+        <div class="chip chip--gray" style="background:#F0E8FF;color:#7B1FA2;">Sensory Alliance</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="container"><div class="divider"></div></div>
+
+<!-- ═══════════════════════════════════════ -->
+<!--  SECTION 5: DESIGN PHILOSOPHY           -->
+<!-- ═══════════════════════════════════════ -->
+<section id="philosophy">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-num">04</span>
+      <h2 class="t-section">Design Philosophy</h2>
+      <p class="t-body section-desc">쾌락의 껍질 안에 발견의 씨앗을 넣는다.</p>
+    </div>
+
+    <div class="callout mb-48 reveal">
+      <p>사용자는 껍질을 즐기러 오지만, 씨앗이 심어진다. 씨앗은 사용자가 원할 때만 싹이 튼다. 강제하지 않는다.</p>
+    </div>
+
+    <!-- 5 Principles -->
+    <h3 class="t-subsection mb-24 reveal">Five Principles</h3>
+    <div class="mb-48">
+      <div class="card mb-12 reveal">
+        <div class="flex items-center gap-12 mb-12">
+          <span class="t-mono" style="color:var(--accent);font-weight:600;">01</span>
+          <span class="t-subheading">Pleasure carries discovery</span>
+        </div>
+        <p class="t-body">탐색하면 보상이 아니라, 재미있는 것을 했더니 나에 대해 알게 되었네. 보상이 미끼이고 발견이 부산물처럼 느껴지게. 실제론 발견이 본질.</p>
+      </div>
+      <div class="card mb-12 reveal reveal-delay-1">
+        <div class="flex items-center gap-12 mb-12">
+          <span class="t-mono" style="color:var(--accent);font-weight:600;">02</span>
+          <span class="t-subheading">External frame → Internal sense</span>
+        </div>
+        <p class="t-body">MBTI 같은 외부 지표로 시작하되, 점점 보조바퀴를 뗀다. 급한 전환은 불안, 안 하면 분류에 갇힘. 경사로 설계가 핵심.</p>
+      </div>
+      <div class="card mb-12 reveal reveal-delay-2">
+        <div class="flex items-center gap-12 mb-12">
+          <span class="t-mono" style="color:var(--accent);font-weight:600;">03</span>
+          <span class="t-subheading">Accumulation visible, evaluation absent</span>
+        </div>
+        <p class="t-body">스포티파이 리플레이처럼, 데이터를 주되 해석을 강요하지 않는다. 평가 없는 피드백. 해석의 주도권은 사용자에게.</p>
+      </div>
+      <div class="card mb-12 reveal reveal-delay-3">
+        <div class="flex items-center gap-12 mb-12">
+          <span class="t-mono" style="color:var(--accent);font-weight:600;">04</span>
+          <span class="t-subheading">Capture moments of alignment</span>
+        </div>
+        <p class="t-body">몰입, 편안함, 에너지 상승 순간의 조건을 조용히 기록. 좋은 상태네요라고 평가하지 않고, 나중에 사용자가 스스로 패턴을 발견하게.</p>
+      </div>
+      <div class="card mb-12 reveal reveal-delay-4">
+        <div class="flex items-center gap-12 mb-12">
+          <span class="t-mono" style="color:var(--accent);font-weight:600;">05</span>
+          <span class="t-subheading">Multi-layered time horizon</span>
+        </div>
+        <p class="t-body">즉시 보상(감각적 쾌락), 중기 보상(패턴 발견), 장기 보상(감각 선명화)이 각각 다른 시간축에서 작동. 즉시 보상이 중기·장기의 입구.</p>
+      </div>
+    </div>
+
+    <!-- Pleasure x Seed Matrix -->
+    <h3 class="t-subsection mb-20 reveal">Pleasure × Seed Matrix</h3>
+    <div class="data-table-wrap reveal">
+      <table class="data-table">
+        <thead><tr><th>Pleasure Layer</th><th>Description</th><th>Seed Type</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td>Sensory</td><td>맛, 향, 음악, 촉감</td><td>대비를 통한 해상도 상승</td><td>두 가지 사운드스케이프 비교</td></tr>
+          <tr><td>Social</td><td>공유 반응, 소속감, 인정</td><td>반향을 통한 신뢰 축적</td><td>취향 기반 커뮤니티 매칭</td></tr>
+          <tr><td>Cognitive</td><td>알게 되는 재미, 퍼즐</td><td>우연한 마주침을 통한 확장</td><td>디깅의 뜻밖의 가닥</td></tr>
+          <tr><td>Efficacy</td><td>해냈다는 느낌, 완료감</td><td>패턴 가시화를 통한 언어화</td><td>월간 감정/활동 리뷰</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="container"><div class="divider"></div></div>
+
+<!-- ═══════════════════════════════════════ -->
+<!--  SECTION 6: TECHNICAL ARCHITECTURE      -->
+<!-- ═══════════════════════════════════════ -->
+<section id="tech">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-num">05</span>
+      <h2 class="t-section">Technical Architecture</h2>
+      <p class="t-body section-desc">Sensing → Preprocessing → AI → User Experience. 네 개의 레이어로 구성된 기술 아키텍처.</p>
+    </div>
+
+    <!-- Architecture Layers -->
+    <div class="mb-48 reveal">
+      <div class="arch-layer mb-4">
+        <div class="arch-label" style="background:linear-gradient(135deg,#3D5AFE,#536DFE);">Sensing</div>
+        <div class="arch-content">
+          <div class="t-subheading mb-4">센서 계층</div>
+          <p class="t-body">Microphone Array (SER), PPG/HRV, EDA, Accelerometer/Gyro, Ambient Light/Temp, Camera Vision (opt-in)</p>
+        </div>
+      </div>
+      <div class="arch-layer mb-4">
+        <div class="arch-label" style="background:linear-gradient(135deg,#00897B,#26A69A);">Preprocessing</div>
+        <div class="arch-content">
+          <div class="t-subheading mb-4">전처리 계층</div>
+          <p class="t-body">SenseVoice (Alibaba), NeuroKit2, Signal Quality Gate, Context Aggregator, Privacy Filter</p>
+        </div>
+      </div>
+      <div class="arch-layer mb-4">
+        <div class="arch-label" style="background:linear-gradient(135deg,#FF6B35,#FF8F65);">AI</div>
+        <div class="arch-content">
+          <div class="t-subheading mb-4">지능 계층</div>
+          <p class="t-body">Emotion Classifier (Circumplex Model), LLM Reasoning Engine, Safety Guardrails, Long-term Memory</p>
+        </div>
+      </div>
+      <div class="arch-layer">
+        <div class="arch-label" style="background:linear-gradient(135deg,#7B1FA2,#9C27B0);">Experience</div>
+        <div class="arch-content">
+          <div class="t-subheading mb-4">경험 계층</div>
+          <p class="t-body">Voice Conversation, Ambient Environment Control, Pattern Visualization, Exploration Recommendation</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Key Tech Details -->
+    <div class="grid-2 mb-40 reveal">
+      <div class="card">
+        <div class="t-subheading mb-12">SenseVoice — 음성 감정 인식</div>
+        <p class="t-body mb-12">Alibaba FunAudioLLM의 음성 기반 모델. 50개 이상 언어 지원, Whisper 대비 5배 이상 빠른 추론 속도. 음성 감정 인식에서 기존 최고 성능 모델을 상회.</p>
+        <p class="t-body">음성 감정 인식은 통제된 환경에서 90% 이상, 실제 환경에서 60-75% 정확도. 다중 모달 융합(음성 + 생체 + 맥락)으로 보완한다.</p>
+      </div>
+      <div class="card">
+        <div class="t-subheading mb-12">LLM Reasoning — 핵심 설계 원칙</div>
+        <p class="t-body mb-8">해석하지 않는다: 너 스트레스 상태구나가 아니라, 오늘 목소리가 좀 다른 것 같은데 수준의 관찰만 제시.</p>
+        <p class="t-body mb-8">외부 기준을 주입하지 않는다: 사용자의 과거 패턴에서 편안했던 조건을 참조하여 환경을 은연중 조절.</p>
+        <p class="t-body">맥락을 기억한다: 장기 대화 메모리로 관계적 신뢰를 축적.</p>
+      </div>
+    </div>
+
+    <!-- Safety -->
+    <h3 class="t-subsection mb-16 reveal">Safety Guardrails</h3>
+    <div class="grid-3 reveal">
+      <div class="card--flat card">
+        <div class="t-subheading mb-8">Clinical Boundary</div>
+        <p class="t-body">Languishing을 넘어 임상 영역 진입 신호 감지 시 전문 상담 연결 제안.</p>
+      </div>
+      <div class="card--flat card">
+        <div class="t-subheading mb-8">Manipulation Prevention</div>
+        <p class="t-body">AI가 감정을 특정 방향으로 유도하거나 의존성을 형성하지 않도록 하는 윤리적 가드레일.</p>
+      </div>
+      <div class="card--flat card">
+        <div class="t-subheading mb-8">Data Governance</div>
+        <p class="t-body">감정 데이터 수집·저장·활용의 투명한 정책. 사용자의 언제든 삭제 권한.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="container"><div class="divider"></div></div>
+
+<!-- ═══════════════════════════════════════ -->
+<!--  SECTION 7: UX FRAMEWORK                -->
+<!-- ═══════════════════════════════════════ -->
+<section id="ux">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-num">06</span>
+      <h2 class="t-section">User Experience Framework</h2>
+      <p class="t-body section-desc">사용자의 의도 수준에 따라 전환되는 세 가지 경험 모드.</p>
+    </div>
+
+    <div class="grid-3 mb-48 reveal">
+      <div class="card" style="border-top:3px solid var(--accent);">
+        <div class="t-label mb-8" style="color:var(--accent);">Zero Intent</div>
+        <div class="t-subsection mb-12" style="font-size:1.2rem;">Ambient Mode</div>
+        <p class="t-body mb-16">아무것도 하지 않아도 작동. 센싱 레이어가 환경과 상태를 파악하여 조명, 사운드스케이프, 온도를 미세 조절. 사용자는 개입을 의식하지 않는다.</p>
+        <div class="t-caption">아침 각성 곡선 맞춤 조명 · 집중 감지 시 알림 차단 · 저녁 이완 환경 자동 조성</div>
+      </div>
+      <div class="card" style="border-top:3px solid var(--accent-warm);">
+        <div class="t-label mb-8" style="color:var(--accent-warm);">Low Intent</div>
+        <div class="t-subsection mb-12" style="font-size:1.2rem;">Responsive Mode</div>
+        <p class="t-body mb-16">가벼운 상호작용에 반응. 판단하지 않고 반향하는 AI 컴패니언. 오늘 좀 이상해 → 어떤 느낌이야? 해석 없이 탐색을 돕는다.</p>
+        <div class="t-caption">비판단적 대화 · 침묵 허용 · 에피소딕 메모리 참조</div>
+      </div>
+      <div class="card" style="border-top:3px solid #7B1FA2;">
+        <div class="t-label mb-8" style="color:#7B1FA2;">High Intent</div>
+        <div class="t-subsection mb-12" style="font-size:1.2rem;">Active Mode</div>
+        <p class="t-body mb-16">사용자 주도의 깊은 탐색. 패턴 리뷰, 취향 발견 세션, 감정 로그 열람. 점수 없이 궤적으로 보여준다.</p>
+        <div class="t-caption">감정-활동 패턴 시각화 · 에너지 상승 조건 분석 · 탐색 반경 확장 제안</div>
+      </div>
+    </div>
+
+    <!-- Consumer Value -->
+    <h3 class="t-subsection mb-20 reveal">Consumer Value Proposition</h3>
+    <p class="t-body mb-24 reveal">내부 메커니즘은 감각 회복이지만, 소비자에게 보여주는 표면은 다르다. 쾌락의 껍질이 여기서도 작동한다.</p>
+    <div class="grid-3 reveal">
+      <div class="card card--dark">
+        <div class="card-icon card-icon--dark">🎯</div>
+        <div class="t-subheading mb-8" style="color:white;">Taste Discovery</div>
+        <p class="t-body">너의 진짜 취향을 찾아준다. 감정과 맥락까지 결합한 취향 발견은 아직 없다.</p>
+      </div>
+      <div class="card card--dark">
+        <div class="card-icon card-icon--dark">🌀</div>
+        <div class="t-subheading mb-8" style="color:white;">Personalized Rhythm</div>
+        <p class="t-body">남들의 루틴이 아닌, 내 리듬에 맞는 루틴을 발견한다. 이걸 해라가 아닌, 이게 너에게 맞는지 느껴봐.</p>
+      </div>
+      <div class="card card--dark">
+        <div class="card-icon card-icon--dark">📊</div>
+        <div class="t-subheading mb-8" style="color:white;">Life Pattern Discovery</div>
+        <p class="t-body">기록을 넘어 패턴을 발견한다. 기록 자체가 재미(껍질), 쌓인 패턴이 발견(씨앗).</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="container"><div class="divider"></div></div>
+
+<!-- ═══════════════════════════════════════ -->
+<!--  SECTION 8: COMPETITIVE DIFFERENTIATION -->
+<!-- ═══════════════════════════════════════ -->
+<section id="compete">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-num">07</span>
+      <h2 class="t-section">Competitive Differentiation</h2>
+      <p class="t-body section-desc">기존 웰니스 솔루션과의 구조적 차이.</p>
+    </div>
+
+    <div class="data-table-wrap mb-48 reveal">
+      <table class="data-table">
+        <thead><tr><th>Player</th><th>Approach</th><th>Limitation</th></tr></thead>
+        <tbody>
+          <tr><td>Calm / Headspace</td><td>가이드 명상 콘텐츠 구독</td><td>의도적 앱 오픈 필요. 결핍 모델. 높은 이탈률.</td></tr>
+          <tr><td>Apple Health/Watch</td><td>수치 중심 건강 트래킹</td><td>수치 평가. 감정적 깊이 없음. 도구일 뿐 동반자가 아님.</td></tr>
+          <tr><td>Character AI / Replika</td><td>AI 챗봇 컴패니언</td><td>웰니스 결과물 없음. 또 하나의 스크린. 의존성 위험.</td></tr>
+          <tr><td>Hume AI</td><td>감정 AI API (B2B)</td><td>기술 플랫폼. 소비자 제품이 아님. 웰니스 UX 부재.</td></tr>
+          <tr><td>Oura / WHOOP</td><td>바이오메트릭 트래킹</td><td>Quantified self 패러다임. 의미 없는 데이터.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="t-subsection mb-20 reveal">Differentiation Matrix</h3>
+    <div class="mb-40">
+      <div class="compare-row reveal"><div class="compare-left">Intent-driven activation</div><div class="compare-vs">→</div><div class="compare-right">Ambient-first activation</div></div>
+      <div class="compare-row reveal reveal-delay-1"><div class="compare-left">Fix-what's-broken paradigm</div><div class="compare-vs">→</div><div class="compare-right">Sensory calibration paradigm</div></div>
+      <div class="compare-row reveal reveal-delay-2"><div class="compare-left">Scores, rankings, streaks</div><div class="compare-vs">→</div><div class="compare-right">Patterns, trajectories, reflections</div></div>
+      <div class="compare-row reveal reveal-delay-3"><div class="compare-left">AI as therapist/coach</div><div class="compare-vs">→</div><div class="compare-right">AI as resonance companion</div></div>
+      <div class="compare-row reveal reveal-delay-4"><div class="compare-left">Habit formation (extrinsic)</div><div class="compare-vs">→</div><div class="compare-right">Evolving self-discovery (intrinsic)</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!--  SECTION 9: STRATEGY (DARK)             -->
+<!-- ═══════════════════════════════════════ -->
+<section id="strategy" class="section--dark">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-num">08</span>
+      <h2 class="t-section">Strategic Positioning</h2>
+      <p class="t-body section-desc">왜 삼성인가, 그리고 단계별 접근 전략.</p>
+    </div>
+
+    <div class="grid-3 mb-48 reveal">
+      <div class="card">
+        <div class="t-label mb-8">Consumer Perspective</div>
+        <div class="t-subheading mb-8">생활 공간에 스며드는 웰니스</div>
+        <p class="t-body">앱을 열어야 시작되는 웰니스 vs 살고 있으면 작동하는 웰니스. Ambient 모드는 생활 공간 터치포인트가 있을 때 가장 강력해진다.</p>
+      </div>
+      <div class="card">
+        <div class="t-label mb-8">Business Perspective</div>
+        <div class="t-subheading mb-8">하드웨어 코모디티화 대응</div>
+        <p class="t-body">스펙 경쟁에서 경험 경쟁으로. 이 생태계 안에 있으면 나를 더 잘 알게 되는 경험이 전환 이유가 되면 생태계 록인.</p>
+      </div>
+      <div class="card">
+        <div class="t-label mb-8">C-Lab Perspective</div>
+        <div class="t-subheading mb-8">실험 가능한 공간</div>
+        <p class="t-body">기존 KPI에 묶이지 않기에, 단기 DAU 최적화를 피하고 강요하지 않는 설계 원칙을 실험할 수 있다.</p>
+      </div>
+    </div>
+
+    <!-- Phased Approach -->
+    <h3 class="t-subsection mb-24 reveal" style="color:var(--text-inverse);">Phased Approach</h3>
+    <div class="timeline reveal">
+      <div class="timeline-item">
+        <div class="t-subheading mb-4" style="color:var(--text-inverse);">Phase 1: Core Validation</div>
+        <div class="chip chip--blue mb-8">C-Lab 기간</div>
+        <p class="t-body">단일 디바이스(스마트 스피커 폼팩터 또는 앱). 음성 기반 감정 인식 + AI 대화 + 기본 환경 제어. 핵심 가설 검증: 감각 기반 웰니스 경험이 실제로 작동하는가?</p>
+      </div>
+      <div class="timeline-item">
+        <div class="t-subheading mb-4" style="color:var(--text-inverse);">Phase 2: Experience Expansion</div>
+        <div class="chip chip--orange mb-8">스핀오프 후 1-2년</div>
+        <p class="t-body">멀티 디바이스 연동. 워치 생체 데이터, 이어폰 사운드스케이프, 조명 제어 통합. Ambient 모드 완성.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="t-subheading mb-4" style="color:var(--text-inverse);">Phase 3: Ecosystem Integration</div>
+        <div class="chip chip--green mb-8">장기 비전</div>
+        <p class="t-body">삼성 디바이스 생태계 전체 통합. 생활 공간 전체에 스며드는 웰니스 시스템 완성.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!--  SECTION 10: NEXT STEPS                 -->
+<!-- ═══════════════════════════════════════ -->
+<section id="next">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-num">09</span>
+      <h2 class="t-section">Conclusion & Next Steps</h2>
+      <p class="t-body section-desc">검증해야 할 핵심 가설, 리스크, 그리고 앞으로의 질문들.</p>
+    </div>
+
+    <!-- Hypotheses -->
+    <h3 class="t-subsection mb-20 reveal">검증해야 할 핵심 가설</h3>
+    <div class="data-table-wrap mb-48 reveal">
+      <table class="data-table">
+        <thead><tr><th>Hypothesis</th><th>Validation Method</th><th>Success Criteria</th></tr></thead>
+        <tbody>
+          <tr><td>Ambient 모드가 앱 없이도 웰니스 경험을 제공할 수 있다</td><td>Usage log + 만족도 조사</td><td>Active 모드 미사용자도 긍정적 경험 보고</td></tr>
+          <tr><td>감정-맥락 적응형 환경 제어가 상태 개선에 기여한다</td><td>WHO-5 Pre-post + 생체 데이터</td><td>WHO-5 유의미한 개선</td></tr>
+          <tr><td>평가 없는 패턴 제시가 수치화 피드백보다 선호된다</td><td>A/B test</td><td>패턴 시각화 그룹 만족도 우위</td></tr>
+          <tr><td>쾌락의 껍질 + 발견의 씨앗이 리텐션을 개선한다</td><td>30-day retention 비교</td><td>Industry median (3.3%) 대비 3배 이상</td></tr>
+          <tr><td>AI의 맥락 기억이 관계적 신뢰를 형성한다</td><td>Trust questionnaire + 대화 빈도</td><td>사용 기간에 비례한 대화 빈도 증가</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Risks -->
+    <h3 class="t-subsection mb-20 reveal">Risk Factors</h3>
+    <div class="grid-2 mb-48 reveal">
+      <div class="card" style="border-left:3px solid #E53935;">
+        <div class="t-subheading mb-8">Privacy Sensitivity</div>
+        <p class="t-body">감정 데이터는 가장 민감한 개인 정보. 온디바이스 처리 우선, 투명한 데이터 정책 필수.</p>
+      </div>
+      <div class="card" style="border-left:3px solid #E53935;">
+        <div class="t-subheading mb-8">Emotion Recognition Accuracy</div>
+        <p class="t-body">실환경 정확도 60-75%가 기대에 미달할 위험. 오분류에 대한 graceful degradation 설계 필요.</p>
+      </div>
+      <div class="card" style="border-left:3px solid #FF9800;">
+        <div class="t-subheading mb-8">Uncanny Valley of Empathy</div>
+        <p class="t-body">AI 공감이 진짜 같지만 진짜가 아닌 영역에 빠지면 거부감 유발. AI 한계의 투명한 인정.</p>
+      </div>
+      <div class="card" style="border-left:3px solid #FF9800;">
+        <div class="t-subheading mb-8">Clinical Boundary</div>
+        <p class="t-body">Languishing과 clinical depression 경계에서의 판단 오류 위험. 보수적 안전 가드레일.</p>
+      </div>
+    </div>
+
+    <!-- Open Questions -->
+    <h3 class="t-subsection mb-20 reveal">앞으로의 질문</h3>
+    <div class="reveal">
+      <div class="card mb-12">
+        <p class="t-body" style="color:var(--text);">1. 최초 진입 동기를 충분히 만드는 소비자 표면(Surface Layer)은 구체적으로 무엇인가? 세 가지 표면 중 어떤 것이 가장 낮은 마찰로 시작을 유도하는가?</p>
+      </div>
+      <div class="card mb-12">
+        <p class="t-body" style="color:var(--text);">2. 단일 디바이스 vs 앱 우선 전략에서 어떤 것이 핵심 경험 검증에 더 적합한가? 물리적 디바이스의 존재가 Ambient 경험에 필수적인가, 앱으로도 부분적으로 검증 가능한가?</p>
+      </div>
+      <div class="card mb-12">
+        <p class="t-body" style="color:var(--text);">3. 감정 인식의 정확도 한계를 사용자 경험에서 어떻게 우아하게 처리할 것인가? 오분류가 신뢰를 파괴하지 않는 안전한 실패 모드는?</p>
+      </div>
+      <div class="card mb-12">
+        <p class="t-body" style="color:var(--text);">4. 자기 발견이라는 장기 가치를 느끼기 전에 이탈하는 사용자를 어떻게 잡는가? 발견의 씨앗이 싹트기까지의 최소 기간은 얼마이며, 그 기간을 어떻게 버티게 할 것인가?</p>
+      </div>
+      <div class="card mb-12">
+        <p class="t-body" style="color:var(--text);">5. 이 솔루션이 실제로 삼성 하드웨어 생태계 없이도 독립적으로 가치를 만들 수 있는가? C-Lab 단계에서 삼성 생태계와 무관하게 증명할 수 있는 핵심 가치는 무엇인가?</p>
+      </div>
+      <div class="card">
+        <p class="t-body" style="color:var(--text);">6. 비즈니스 모델은 무엇인가? 하드웨어 판매, 구독, 프리미엄 기능, 또는 삼성 디바이스 생태계의 부가 서비스? 지불 의향의 크기와 형태는?</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <p>Samsung C-Lab — Adaptive Sensory Wellness Companion — Confidential</p>
+  <p style="margin-top:8px;">2026. 02.</p>
+</footer>
+
+<!-- ═══════════════════════════════════════ -->
+<!--  SCRIPTS                                -->
+<!-- ═══════════════════════════════════════ -->
+<script>
+// Scroll reveal
+const reveals = document.querySelectorAll('.reveal');
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+reveals.forEach(el => revealObserver.observe(el));
+
+// Nav scroll state
+const nav = document.getElementById('mainNav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+}, { passive: true });
+
+// Progress bar
+const progressBar = document.getElementById('progressBar');
+window.addEventListener('scroll', () => {
+  const h = document.documentElement.scrollHeight - window.innerHeight;
+  progressBar.style.width = (window.scrollY / h * 100) + '%';
+}, { passive: true });
+
+// Active nav link
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-links a');
+const sectionObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      navLinks.forEach(l => {
+        l.classList.toggle('active', l.getAttribute('data-section') === id);
+      });
+    }
+  });
+}, { threshold: 0.2, rootMargin: '-80px 0px -50% 0px' });
+sections.forEach(s => sectionObserver.observe(s));
+</script>
+</body>
+</html>

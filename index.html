@@ -1307,6 +1307,118 @@ footer p {
       </div>
     </div>
 
+    <!-- Multimodal Sensing Protocol -->
+    <div class="divider"></div>
+    <h3 class="t-subsection mb-20 reveal">Multimodal Sensing Protocol</h3>
+    <p class="t-body mb-24 reveal">여섯 개의 센서는 언제, 어떤 조건에서 작동하며, 서로 다른 샘플링 속도를 가진 센서 간 시간차는 어떻게 해결하는가.</p>
+
+    <!-- When to sense -->
+    <h4 class="t-subheading mb-16 reveal">센싱 시점과 트리거 전략</h4>
+    <div class="grid-3 mb-40 reveal">
+      <div class="card">
+        <div class="card-icon card-icon--blue">🔄</div>
+        <div class="t-subheading mb-8">Continuous Passive</div>
+        <p class="t-body mb-8">항시 작동하는 저전력 센서. 환경 센서(조도, 온도)와 가속도계가 상시 기본 맥락을 수집한다. 사용자 존재 여부와 환경 변화를 감지하는 기초 레이어.</p>
+        <div class="t-caption">Ambient Light/Temp: ~1Hz · Accelerometer: ~10Hz (저전력 모드)</div>
+      </div>
+      <div class="card">
+        <div class="card-icon card-icon--orange">⚡</div>
+        <div class="t-subheading mb-8">Event-Triggered</div>
+        <p class="t-body mb-8">사용자의 음성이 감지되거나 디바이스에 근접하면 고해상도 센서가 활성화. 마이크 어레이의 SER 파이프라인, PPG, EDA가 이 시점에 본격 가동된다.</p>
+        <div class="t-caption">Voice Activity Detection → SER 활성 · 근접 센서 → 생체 센서 웨이크업</div>
+      </div>
+      <div class="card">
+        <div class="card-icon card-icon--green">📊</div>
+        <div class="t-subheading mb-8">Periodic Sampling</div>
+        <p class="t-body mb-8">사용자가 디바이스 근처에 있을 때 일정 간격으로 생체 신호를 샘플링. 대화가 없는 시간에도 감정 상태의 베이스라인을 유지하여 변화 감지 정확도를 높인다.</p>
+        <div class="t-caption">PPG/HRV: 30초마다 10초 샘플링 · EDA: 5분마다 스팟 체크</div>
+      </div>
+    </div>
+
+    <!-- Sensor Synchronization -->
+    <h4 class="t-subheading mb-16 reveal">센서 간 시간 동기화</h4>
+    <p class="t-body mb-24 reveal">각 센서의 샘플링 레이트가 다르기 때문에(마이크 16kHz, PPG 25–100Hz, EDA 4–8Hz, 가속도계 50Hz, 환경 센서 ~1Hz) 원시 데이터를 직접 비교할 수 없다. 이를 해결하기 위한 3단계 시간 정합 파이프라인을 적용한다.</p>
+    <div class="grid-3 mb-40 reveal">
+      <div class="card--flat card">
+        <div class="t-subheading mb-8">1. Timestamp Buffer</div>
+        <p class="t-body">모든 센서 데이터에 디바이스 단일 클럭 기준의 밀리초 타임스탬프를 부여. 데이터가 도착하는 순서가 아닌 발생 시점 기준으로 정렬한다.</p>
+      </div>
+      <div class="card--flat card">
+        <div class="t-subheading mb-8">2. Sliding Window Alignment</div>
+        <p class="t-body">2초 단위 슬라이딩 윈도우로 모든 모달리티를 동일 시간 프레임에 매핑. 고해상도 데이터(음성)는 윈도우 내 통계값으로, 저해상도 데이터(환경)는 보간법으로 정합한다.</p>
+      </div>
+      <div class="card--flat card">
+        <div class="t-subheading mb-8">3. Confidence-Weighted Fusion</div>
+        <p class="t-body">각 모달리티의 신호 품질(SNR)을 실시간 평가하여 신뢰도 가중치를 부여. 소음 환경에서는 음성 가중치를 낮추고 생체 신호 비중을 높이며, 움직임이 많으면 PPG 가중치를 낮추는 적응형 융합.</p>
+      </div>
+    </div>
+
+    <!-- Sensing Pipeline Table -->
+    <div class="data-table-wrap mb-40 reveal">
+      <table class="data-table">
+        <thead><tr><th>Sensor</th><th>Sampling Rate</th><th>Trigger</th><th>Latency</th><th>Fusion Role</th></tr></thead>
+        <tbody>
+          <tr><td>Microphone Array</td><td>16 kHz</td><td>VAD (Voice Activity)</td><td>~200ms (SER)</td><td>Primary emotion signal, 대화 맥락</td></tr>
+          <tr><td>PPG / HRV</td><td>25–100 Hz</td><td>근접 감지 + 주기적</td><td>~30s (HRV 추출)</td><td>자율신경 각성도, 스트레스 베이스라인</td></tr>
+          <tr><td>EDA</td><td>4–8 Hz</td><td>근접 감지 + 주기적</td><td>~1–3s (SCR 피크)</td><td>정서적 각성 강도, 순간 반응 포착</td></tr>
+          <tr><td>Accelerometer / Gyro</td><td>50 Hz (full) / 10 Hz (LP)</td><td>상시 (저전력)</td><td>실시간</td><td>활동 상태 분류, PPG 모션 아티팩트 보상</td></tr>
+          <tr><td>Ambient Light / Temp</td><td>~1 Hz</td><td>상시</td><td>실시간</td><td>환경 맥락, 시간대 및 장소 추론</td></tr>
+          <tr><td>Camera Vision</td><td>가변 (opt-in)</td><td>사용자 명시 동의 시</td><td>~500ms</td><td>표정 보조 데이터, 제스처 및 자세 감지</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Contextual Data Integration -->
+    <div class="divider"></div>
+    <h3 class="t-subsection mb-20 reveal">Contextual Data Integration</h3>
+    <p class="t-body mb-24 reveal">센서 데이터만으로는 감정의 '원인'을 알 수 없다. 스마트폰, 캘린더, 메일, 생산성 도구 등 사용자의 디지털 맥락 데이터를 결합하면 센싱 정확도와 맞춤형 경험의 질이 모두 크게 향상된다.</p>
+
+    <div class="grid-2 mb-40 reveal">
+      <div class="card">
+        <div class="card-icon card-icon--blue">📱</div>
+        <div class="t-subheading mb-8">스마트폰 사용 패턴</div>
+        <p class="t-body mb-8">스크린 타임, 앱 카테고리별 사용 시간, 알림 응답 속도, 잠금 해제 빈도 등 행동 메타데이터를 분석. 콘텐츠 자체는 읽지 않고 패턴만 추출한다.</p>
+        <div class="t-caption">예: SNS 사용 급증 + EDA 상승 → 사회적 비교 스트레스 맥락 추론</div>
+      </div>
+      <div class="card">
+        <div class="card-icon card-icon--orange">📅</div>
+        <div class="t-subheading mb-8">캘린더 & 일정</div>
+        <p class="t-body mb-8">미팅 밀도, 공백 시간, 이동 예정, 반복 일정 패턴을 참조하여 하루의 에너지 곡선을 예측. 바쁜 하루 전후로 환경을 선제적으로 조절한다.</p>
+        <div class="t-caption">예: 연속 미팅 후 30분 공백 → 자동 이완 환경 + 대화 시도 억제</div>
+      </div>
+      <div class="card">
+        <div class="card-icon card-icon--purple">✉️</div>
+        <div class="t-subheading mb-8">메일 & 메시징 메타데이터</div>
+        <p class="t-body mb-8">응답 지연 시간, 미처리 메시지 누적량, 커뮤니케이션 빈도 변화를 관찰. 내용은 확인하지 않되 커뮤니케이션 부하를 추정한다.</p>
+        <div class="t-caption">예: 안 읽은 메일 급증 + HRV 저하 → 업무 과부하 맥락 감지</div>
+      </div>
+      <div class="card">
+        <div class="card-icon card-icon--green">📝</div>
+        <div class="t-subheading mb-8">생산성 도구 (Notion, 할 일 등)</div>
+        <p class="t-body mb-8">작업 완료율, 미루기 패턴, 프로젝트 마감일 근접도를 추적. 성취감과 압박감의 교차점에서 맞춤형 환경을 제공한다.</p>
+        <div class="t-caption">예: 마감 3일 전 + 완료율 20% → 집중 환경 강화, 방해 최소화</div>
+      </div>
+    </div>
+
+    <div class="callout mb-40 reveal">
+      <p>핵심 원칙: 콘텐츠를 읽지 않는다. 메타데이터만 분석한다. 사용자가 어떤 앱과 연동할지 선택하며, 언제든 연동을 해제할 수 있다. 모든 분석은 온디바이스에서 수행되고, 원시 데이터는 외부로 전송되지 않는다.</p>
+      <div class="callout-src">Privacy-first Contextual Intelligence</div>
+    </div>
+
+    <!-- How context enhances sensing -->
+    <h4 class="t-subheading mb-16 reveal">맥락 데이터가 센싱을 강화하는 방식</h4>
+    <div class="data-table-wrap mb-40 reveal">
+      <table class="data-table">
+        <thead><tr><th>센서 단독 추론</th><th>+ 맥락 데이터</th><th>향상된 추론</th></tr></thead>
+        <tbody>
+          <tr><td>HRV 저하 감지</td><td>캘린더: 발표 30분 전</td><td>수행 불안 가능성 높음 → 안정화 환경 선제 조성</td></tr>
+          <tr><td>음성 에너지 저하</td><td>스마트폰: 수면 앱 사용 감소</td><td>수면 부족에 의한 피로 → 오후 에너지 리듬 조절</td></tr>
+          <tr><td>EDA 상승 + 움직임 없음</td><td>메일: 미응답 메시지 20건</td><td>업무 압박 관련 각성 → 환경 이완 우선</td></tr>
+          <tr><td>대화 빈도 감소</td><td>캘린더: 주말 일정 비어 있음</td><td>사회적 고립 패턴 → 탐색 반경 확장 제안 준비</td></tr>
+        </tbody>
+      </table>
+    </div>
+
     <!-- Safety -->
     <h3 class="t-subsection mb-16 reveal">Safety Guardrails</h3>
     <div class="grid-3 reveal">
@@ -1358,6 +1470,106 @@ footer p {
         <p class="t-body mb-16">사용자 주도의 깊은 탐색. 패턴 리뷰, 취향 발견 세션, 감정 로그 열람. 점수 없이 궤적으로 보여준다.</p>
         <div class="t-caption">감정-활동 패턴 시각화 · 에너지 상승 조건 분석 · 탐색 반경 확장 제안</div>
       </div>
+    </div>
+
+    <!-- Sensing Experience Design -->
+    <div class="divider"></div>
+    <h3 class="t-subsection mb-20 reveal">Sensing Experience Design</h3>
+    <p class="t-body mb-24 reveal">감정 센싱이 사용자에게 어떤 경험으로 다가오는가. 매일 같은 시간에 "기분이 어때요?"라고 묻는 체크인 ritual이 아닌, 생활 리듬에 자연스럽게 녹아드는 대화의 결을 설계한다.</p>
+
+    <!-- Why not ritual -->
+    <div class="grid-2 mb-40 reveal">
+      <div class="card--flat card">
+        <div class="t-subheading mb-8">왜 체크인 ritual이 아닌가</div>
+        <p class="t-body">매일 정해진 시점에 자기 보고를 요구하는 구조는 "의도적 결심의 피로" — 리텐션 실패의 구조적 원인을 그대로 반복한다. 앱을 열어야 시작되는 구조의 변형일 뿐이다. 또한 정해진 시점의 자기 보고는 정확도가 낮고, 사회적 바람직성 편향이 개입되어 센싱 데이터를 오염시킨다.</p>
+      </div>
+      <div class="card--flat card">
+        <div class="t-subheading mb-8">생활 전환점 기반 자연 대화</div>
+        <p class="t-body">사용자의 하루에는 자연적 전환점이 있다 — 귀가, 기상, 취침 준비, 식사 후, 업무 종료. 이 전환점에서 환경이 자연스럽게 바뀌면서 대화의 문이 열린다. 대화는 선택이지, 의무가 아니다. 환경 변화 자체가 센싱의 첫 접점이며, 사용자의 반응 여부도 감정 데이터가 된다.</p>
+      </div>
+    </div>
+
+    <!-- Conversation Trigger Flow -->
+    <h4 class="t-subheading mb-16 reveal">대화 유도의 4단계 흐름</h4>
+    <div class="mb-40">
+      <div class="card mb-12 reveal">
+        <div class="flex items-center gap-12 mb-12">
+          <span class="t-mono" style="color:var(--accent);font-weight:600;">01</span>
+          <span class="t-subheading">환경 전환 (Environmental Shift)</span>
+        </div>
+        <p class="t-body">센서가 생활 전환점을 감지하면(귀가, 기상, 활동 종료 등) 조명과 사운드스케이프를 미세하게 변화시킨다. 이 변화 자체가 첫 번째 터치포인트이며, 사용자의 반응 여부를 관찰한다.</p>
+        <div class="t-caption mt-8">예: 귀가 감지 → 현관 조명 웜톤 전환 + 낮은 볼륨의 사운드스케이프 시작</div>
+      </div>
+      <div class="card mb-12 reveal reveal-delay-1">
+        <div class="flex items-center gap-12 mb-12">
+          <span class="t-mono" style="color:var(--accent);font-weight:600;">02</span>
+          <span class="t-subheading">가벼운 존재 표현 (Gentle Presence)</span>
+        </div>
+        <p class="t-body">환경 변화에 사용자가 반응하면(머무르면, 가까이 오면), 디바이스가 인지 부담 없는 짧은 관찰을 공유한다. 질문이 아닌 관찰이 핵심이다. 감정을 해석하지 않으며, 사실 기반의 가벼운 언급만 한다.</p>
+        <div class="t-caption mt-8">예: "오늘 좀 늦었네." (질문 아닌 관찰) / 따뜻한 톤의 소리 큐만 재생</div>
+      </div>
+      <div class="card mb-12 reveal reveal-delay-2">
+        <div class="flex items-center gap-12 mb-12">
+          <span class="t-mono" style="color:var(--accent);font-weight:600;">03</span>
+          <span class="t-subheading">사용자 선택 (User Opt-in)</span>
+        </div>
+        <p class="t-body">사용자가 반응하면 대화가 자연스럽게 이어지고 Responsive Mode로 전환된다. 반응하지 않으면 그것 역시 데이터 — Ambient 모드로 조용히 환경만 조절한다. 이 선택의 순간이 반복되면서 강제되지 않은 자연스러운 리듬이 만들어진다.</p>
+        <div class="t-caption mt-8">예: "응, 좀 힘든 하루였어" → Responsive Mode 전환 / 무반응 → 이완 환경 유지</div>
+      </div>
+      <div class="card mb-12 reveal reveal-delay-3">
+        <div class="flex items-center gap-12 mb-12">
+          <span class="t-mono" style="color:var(--accent);font-weight:600;">04</span>
+          <span class="t-subheading">자연스러운 그루브 형성 (Natural Groove)</span>
+        </div>
+        <p class="t-body">강제된 루틴이 아닌, 사용자 스스로의 선택이 반복되면서 자연스러운 패턴이 형성된다. 어떤 날은 대화하고 어떤 날은 조용히 — 그 변동 자체가 건강한 리듬이다. 시스템은 이 리듬을 학습하여 점점 더 적절한 시점에, 적절한 방식으로 존재를 표현한다.</p>
+        <div class="t-caption mt-8">2주 후: 사용자의 대화 선호 패턴 학습 완료 → 피로한 날은 환경만, 에너지 넘치는 날은 관찰 공유</div>
+      </div>
+    </div>
+
+    <!-- Ambient Intelligence: Edge Cases -->
+    <div class="divider"></div>
+    <h3 class="t-subsection mb-20 reveal">Ambient Intelligence — 경계 상황과 대응</h3>
+    <p class="t-body mb-24 reveal">Ambient 모드가 무조건 개입하는 것이 아니다. 사용자가 변화를 원하지 않을 때, 혼자 있고 싶을 때, 시스템의 판단이 틀렸을 때 — 이 경계 상황에 대한 설계가 사용자 신뢰의 핵심이다.</p>
+
+    <div class="grid-2 mb-40 reveal">
+      <div class="card">
+        <div class="card-icon card-icon--orange">🚫</div>
+        <div class="t-subheading mb-8">환경 변화를 원하지 않을 때</div>
+        <p class="t-body mb-8">사용자가 조명이나 온도를 수동으로 되돌리면 시스템은 즉시 물러난다. 이 되돌림 행동을 거부 신호로 학습하여, 유사 맥락에서 해당 개입을 억제한다.</p>
+        <p class="t-body">반복적 되돌림이 누적되면 해당 환경 요소의 자동 조절 범위를 축소하거나 사용자에게 명시적으로 선호를 확인한다. 절대 원칙: 사용자의 마지막 수동 설정이 항상 우선한다.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon card-icon--purple">🤫</div>
+        <div class="t-subheading mb-8">화났지만 아무하고도 말하기 싫을 때</div>
+        <p class="t-body mb-8">분노 감정이 감지되어도 사용자가 디바이스를 향해 말하지 않으면, 대화를 시도하지 않는다. 대신 환경만 조용히 조절 — 조명을 약간 따뜻하게, 알림을 차단, 사운드스케이프를 이완 방향으로 미세 전환.</p>
+        <p class="t-body">"말을 걸지 말아야 할 때"를 파악하는 다중 신호: ① 음성 응답 없음 2회 연속 ② 디바이스와의 물리적 거리 유지 ③ 짧고 단절적인 음성("됐어", "아니") ④ 과거 유사 상태에서의 대화 거부 이력 참조.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon card-icon--blue">❓</div>
+        <div class="t-subheading mb-8">시스템 판단이 틀렸을 때</div>
+        <p class="t-body mb-8">감정 인식은 60–75% 정확도. 틀릴 때를 전제로 설계한다. 핵심: 감정을 해석해서 말하지 않기 때문에(너 화났구나 ✕ → 오늘 목소리가 좀 다른 것 같은데 ○), 오분류가 사용자에게 직접 노출되지 않는다.</p>
+        <p class="t-body">환경 조절이 부적절했을 때는 사용자의 되돌림으로 자연스럽게 학습한다. 대화에서 틀려도 관계가 손상되지 않는 안전한 수준의 표현만 사용하는 것이 Graceful Degradation의 핵심.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon card-icon--green">⚖️</div>
+        <div class="t-subheading mb-8">개입 수준의 동적 조절</div>
+        <p class="t-body mb-8">사용자와의 신뢰 수준에 따라 개입의 깊이가 달라진다. 초기에는 환경 조절만, 신뢰가 쌓이면 관찰 공유, 충분한 관계가 형성된 후에야 패턴을 제시한다.</p>
+        <p class="t-body">불확실할 때의 원칙: 덜 하는 것이 더 하는 것보다 낫다. 과잉 개입은 신뢰를 파괴하지만, 미개입은 기회를 놓칠 뿐이다. 기회는 다시 오지만 신뢰는 한번 깨지면 회복이 어렵다.</p>
+      </div>
+    </div>
+
+    <!-- Consent Gradient -->
+    <h4 class="t-subheading mb-16 reveal">Consent Gradient — 단계별 개입 허용 범위</h4>
+    <div class="data-table-wrap mb-48 reveal">
+      <table class="data-table">
+        <thead><tr><th>개입 단계</th><th>설명</th><th>필요 조건</th><th>거부 시 대응</th></tr></thead>
+        <tbody>
+          <tr><td>Level 0: 관찰만</td><td>센싱은 하되 아무 행동도 하지 않음</td><td>기본 (항상)</td><td>—</td></tr>
+          <tr><td>Level 1: 환경 미세 조절</td><td>조명·온도·사운드의 미세한 변화</td><td>초기 설정 동의</td><td>되돌림 시 학습, 조절 범위 축소</td></tr>
+          <tr><td>Level 2: 존재 표현</td><td>소리 큐 또는 짧은 관찰 공유</td><td>1주 이상 사용 + 대화 이력 존재</td><td>무반응 시 즉시 중단, 빈도 감소</td></tr>
+          <tr><td>Level 3: 패턴 공유</td><td>축적 데이터 기반 인사이트 제시</td><td>사용자 주도 요청 또는 깊은 신뢰 형성</td><td>관심 없음 표시 시 해당 유형 억제</td></tr>
+        </tbody>
+      </table>
     </div>
 
     <!-- Consumer Value -->
